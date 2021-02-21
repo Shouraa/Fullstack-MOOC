@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
@@ -16,6 +17,19 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+
+  useEffect(() => {
+    const namesToShow = persons.filter((person) =>
+      person.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setSearchResults(namesToShow);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    axios.get("http://localhost:3001/persons").then((response) => {
+      setPersons(response.data);
+    });
+  });
 
   /* event handler for submitting form */
   const addName = (event) => {
@@ -43,13 +57,6 @@ const App = () => {
   const handleSearchInput = (event) => {
     setSearchTerm(event.target.value);
   };
-
-  useEffect(() => {
-    const namesToShow = persons.filter((person) =>
-      person.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setSearchResults(namesToShow);
-  }, [searchTerm]);
 
   /* Assigning results conditionally */
 
