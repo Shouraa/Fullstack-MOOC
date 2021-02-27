@@ -5,7 +5,7 @@ const getAll = () => {
   const request = axios.get(baseUrl);
   /* Adding an entry to simulate error */
   const nonExisting = {
-    name: "Jimi",
+    name: "Jimi Shoemaker",
     number: "040-123456",
     id: 6000,
   };

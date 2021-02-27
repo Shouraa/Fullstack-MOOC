@@ -4,6 +4,7 @@ import personService from "./services/persons";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -11,13 +12,31 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [notification, setNotification] = useState(null);
 
+  const notificationMsg = {
+    error: `info of ${newName} was already deleted`,
+    added: "A person was added",
+    removed: "A person was removed",
+    updated: "Number was updated",
+  };
+
+  /* Function for showing notifications */
+  const showNotification = (message) => {
+    setNotification(message);
+    setTimeout(() => {
+      setNotification(null);
+    }, 5000);
+  };
+
+  /* Getting all the names */
   useEffect(() => {
     personService.getAll().then((response) => {
       setPersons(response);
     });
   }, []);
 
+  /* Filtering method */
   useEffect(() => {
     const namesToShow = persons.filter((person) =>
       person.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -45,7 +64,10 @@ const App = () => {
             setPersons(
               persons.map((p) => (p.id !== existingEntry.id ? p : response))
             )
-          );
+          )
+          .catch((error) => showNotification(notificationMsg["error"]));
+        showNotification(notificationMsg["updated"]);
+
         setNewName("");
         setNewNumber("");
       }
@@ -55,6 +77,7 @@ const App = () => {
       personService
         .create(newObject)
         .then((response) => setPersons(persons.concat(response)));
+      showNotification(notificationMsg["added"]);
       setNewName("");
       setNewNumber("");
     }
@@ -71,22 +94,21 @@ const App = () => {
   };
 
   /* event handler for handling search */
-
   const handleSearchInput = (event) => {
     setSearchTerm(event.target.value);
   };
 
   /* deleting one name */
-
   const handleDelete = (person) => {
     if (window.confirm(`Do you really want to delete ${person.name}?`)) {
       personService
         .remove(person.id)
         .then(() => {
           setPersons(persons.filter((p) => p.id !== person.id));
+          showNotification(notificationMsg["removed"]);
         })
         .catch((error) => {
-          alert("something went wrong!");
+          showNotification(notificationMsg["error"]);
         });
     }
   };
@@ -104,6 +126,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notification} />
       <Filter handleSearch={handleSearchInput} value={searchTerm} />
       <h3>add a new</h3>
       <PersonForm
