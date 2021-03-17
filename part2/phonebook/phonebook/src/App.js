@@ -44,6 +44,21 @@ const App = () => {
     setSearchResults(namesToShow);
   }, [searchTerm]);
 
+  /* event handler for name input */
+  const handleNameChange = (event) => {
+    setNewName(event.target.value);
+  };
+
+  /* event handler for number input */
+  const handleNumberChange = (event) => {
+    setNewNumber(event.target.value);
+  };
+
+  /* event handler for handling search */
+  const handleSearchInput = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
   /* event handler for submitting form */
   const addName = (event) => {
     event.preventDefault();
@@ -65,37 +80,26 @@ const App = () => {
               persons.map((p) => (p.id !== existingEntry.id ? p : response))
             )
           )
-          .catch((error) => showNotification(notificationMsg["error"]));
+          .catch((error) => showNotification(error.response.data));
         showNotification(notificationMsg["updated"]);
-
-        setNewName("");
-        setNewNumber("");
       }
     } else {
       /* adding the new entry */
       const newObject = { name: newName, number: newNumber };
       personService
         .create(newObject)
-        .then((response) => setPersons(persons.concat(response)));
-      showNotification(notificationMsg["added"]);
-      setNewName("");
-      setNewNumber("");
+        .then((response) => {
+          setPersons(persons.concat(response));
+          showNotification(notificationMsg["added"]);
+        })
+        .catch((error) => {
+          const errorMessage = error.response.data.error;
+          console.log(errorMessage);
+          showNotification(errorMessage);
+        });
     }
-  };
-
-  /* event handler for name input */
-  const handleNameChange = (event) => {
-    setNewName(event.target.value);
-  };
-
-  /* event handler for number input */
-  const handleNumberChange = (event) => {
-    setNewNumber(event.target.value);
-  };
-
-  /* event handler for handling search */
-  const handleSearchInput = (event) => {
-    setSearchTerm(event.target.value);
+    setNewName("");
+    setNewNumber("");
   };
 
   /* deleting one name */
@@ -107,8 +111,9 @@ const App = () => {
           setPersons(persons.filter((p) => p.id !== person.id));
           showNotification(notificationMsg["removed"]);
         })
-        .catch((error) => {
-          showNotification(notificationMsg["error"]);
+        .catch(() => {
+          setPersons(persons.filter((p) => p.id !== person.id));
+          showNotification(`${person.name}the entry had already been deleted`);
         });
     }
   };
