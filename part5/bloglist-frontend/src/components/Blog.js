@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
 const Blog = ({ blog, user, handleChange, removeBlog }) => {
   const blogStyle = {
@@ -9,7 +10,7 @@ const Blog = ({ blog, user, handleChange, removeBlog }) => {
   };
   const [visible, setVisible] = useState(false);
 
-  const hideWhenVisible = { display: visible ? 'none' : '' };
+  // const hideWhenVisible = { display: visible ? 'none' : '' };
   const showWhenVisible = { display: visible ? '' : 'none' };
 
   const compare = user.name.toLowerCase() === blog.author.toLowerCase();
@@ -50,6 +51,13 @@ const Blog = ({ blog, user, handleChange, removeBlog }) => {
       </div>
     </div>
   );
+};
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  removeBlog: PropTypes.func.isRequired,
 };
 
 export default Blog;
