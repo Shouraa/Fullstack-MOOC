@@ -5,6 +5,7 @@ import blogService from './services/blogs';
 import loginService from './services/login';
 import BlogForm from './components/BlogForm';
 import Togglable from './components/Togglable';
+import Footer from './components/Footer';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -88,33 +89,37 @@ const App = () => {
   };
 
   const loginForm = () => (
-    <form onSubmit={handleLogin}>
+    <form id="loginForm" onSubmit={handleLogin}>
       <div>
         username
         <input
-          type='text'
+          id="username"
+          type="text"
           value={username}
-          name='Username'
+          name="Username"
           onChange={({ target }) => setUsername(target.value)}
         />
       </div>
       <div>
         password
         <input
-          type='text'
+          id="password"
+          type="text"
           value={password}
-          name='Password'
+          name="Password"
           onChange={({ target }) => setPassword(target.value)}
         />
       </div>
-      <button type='submit'>login</button>
+      <button id="login-button" type="submit">
+        login
+      </button>
     </form>
   );
 
   const createNewFormRef = useRef();
 
   const createNewForm = () => (
-    <Togglable buttonLabel='create new blog' ref={createNewFormRef}>
+    <Togglable buttonLabel="create new blog" ref={createNewFormRef}>
       <BlogForm createBlog={addNewBlog} />
     </Togglable>
   );
@@ -153,9 +158,10 @@ const App = () => {
             </button>
           </h4>
           {createNewForm()}
-          {blogList()}
+          <div id="blog-list">{blogList()}</div>
         </div>
       )}
+      <Footer />
     </div>
   );
 };

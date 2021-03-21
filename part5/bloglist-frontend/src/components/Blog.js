@@ -34,18 +34,25 @@ const Blog = ({ blog, user, handleChange, removeBlog }) => {
     <div style={blogStyle}>
       <div>
         {blog.title} {blog.author}{' '}
-        <button onClick={toggleVisibility}>{visible ? 'hide' : 'view'}</button>
+        <button id="toggleInfo-button" onClick={toggleVisibility}>
+          {visible ? 'hide' : 'view'}
+        </button>
       </div>
-      <div style={showWhenVisible} className='togglableContent'>
+      <div style={showWhenVisible} className="togglableContent">
         <p>{blog.url}</p>
         <p>
           {' '}
           likes: {blog.likes}{' '}
-          <input type='button' value='like' onClick={handleLike} />{' '}
-          <input type='button' value='dislike' onClick={handleLike} />
+          <input
+            id="like-button"
+            type="button"
+            value="like"
+            onClick={handleLike}
+          />{' '}
+          <input type="button" value="dislike" onClick={handleLike} />
         </p>
         <p>user: {user.name}</p>
-        <button style={removeStyle} onClick={handleRemove}>
+        <button id="remove-button" style={removeStyle} onClick={handleRemove}>
           remove
         </button>
       </div>
