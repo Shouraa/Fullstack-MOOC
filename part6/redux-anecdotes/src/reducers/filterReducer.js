@@ -1,8 +1,8 @@
-const filterReducer = (state = { search: '' }, action) => {
+const filterReducer = (state = '', action) => {
   console.log('state now: ', state);
   switch (action.type) {
     case 'FILTER_ANECDOTE':
-      return { ...state, search: action.value };
+      return action.value;
 
     default:
       return state;
