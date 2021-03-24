@@ -3,7 +3,7 @@ const initialState = '';
 const notificationReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'SET_NOTIFICATION':
-      return action.message;
+      return action.notification;
     case 'REMOVE_NOTIFICATION':
       return initialState;
     default:
@@ -11,16 +11,22 @@ const notificationReducer = (state = initialState, action) => {
   }
 };
 
-export const setNotification = (message) => {
-  return {
-    type: 'SET_NOTIFICATION',
-    message,
-  };
-};
+let timeoutID;
 
-export const notificationTimeOut = () => {
-  return {
-    type: 'REMOVE_NOTIFICATION',
+export const setNotification = (notification, delay) => {
+  return async (dispatch) => {
+    dispatch({
+      type: 'SET_NOTIFICATION',
+      notification,
+    });
+
+    if (timeoutID) {
+      clearTimeout(timeoutID);
+    }
+
+    timeoutID = setTimeout(() => {
+      dispatch({ type: 'REMOVE_NOTIFICATION' });
+    }, delay * 1000);
   };
 };
 
