@@ -9,6 +9,7 @@ const reducer = combineReducers({
   message: notificationReducer,
   filterInput: filterReducer,
 });
+
 const store = createStore(reducer, composeWithDevTools());
 
 export default store;
